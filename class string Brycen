@@ -1,0 +1,77 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <limits>
+
+class Task {
+public:
+    int priority;
+    std::string name;
+    std::string dueDate;
+
+    Task(int p, const std::string& n, const std::string& d) 
+        : priority(p), name(n), dueDate(d) {}
+
+    bool operator<(const Task& other) const {
+        return priority < other.priority;
+    }
+};
+
+int main() {
+    // Create a list to store tasks
+    std::vector<Task> tasks;
+
+    // Input tasks from the user
+    while (true) {
+        std::string name;
+        int priority;
+        std::string dueDate;
+
+        // Input task name
+        std::cout << "Enter task name (or 'q' to quit): ";
+        std::getline(std::cin, name);
+
+        if (name == "q") {
+            break;
+        }
+
+        // Input due date
+        std::cout << "Enter due date (mm/dd/yyyy): ";
+        std::getline(std::cin, dueDate);
+
+        // Input workload
+        std::cout << "Enter workload (1-5): ";
+        while (!(std::cin >> priority) || priority < 1 || priority > 5) {
+            std::cout << "Invalid workload. Please enter a number between 1 and 5: ";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+
+        // Clear the input buffer
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        tasks.emplace_back(priority, name, dueDate);
+    }
+
+    // Sort the tasks based on their ranking
+    std::sort(tasks.begin(), tasks.end());
+
+    // Print the sorted tasks
+    for (const Task& task : tasks) {
+        std::cout << "Task: " << task.name << " (Priority " << task.priority << ", Due " << task.dueDate << ")" << std::endl;
+    }
+
+    // Test print: listing tasks by priority
+    std::cout << "\nTasks by Priority:\n";
+    for (int p = 1; p <= 5; p++) {
+        std::cout << "Priority " << p << ":\n";
+        for (const Task& task : tasks) {
+            if (task.priority == p) {
+                std::cout << "  - " << task.name << " (Due " << task.dueDate << ")\n";
+            }
+        }
+    }
+
+    return 0;
+}
